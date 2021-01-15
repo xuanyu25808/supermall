@@ -1,8 +1,7 @@
 <template>
-  <div class="goods-list-item">
-    <a :href="goodsItem.link">
+  <div class="goods-list-item" @click="itemClick">
       <div class="item-imgBox">
-        <img class="item-img" :src="goodsItem.show.img" alt="">
+        <img class="item-img" :src="goodsItem.show.img" alt="" @load="imageLoad">
       </div>
       <div class="item-title">{{goodsItem.title}}</div>
       <div class="item-content">
@@ -10,8 +9,6 @@
         <span class="item-icon"></span>
         <span class="item-mark">{{goodsItem.sale}}</span>
       </div>
-    </a>
-
 
   </div>
 </template>
@@ -25,6 +22,16 @@
         default(){
           return {}
         }
+      }
+    },
+    methods:{
+      imageLoad(){
+        //使用bus总线向Home发射事件，每加载成功一张图片就传递一次事件
+        this.$bus.$emit('goodsItemImgLoad')
+      },
+      itemClick(){
+        this.$router.push('/detail/'+this.goodsItem.iid)
+        console.log('---')
       }
     }
   }

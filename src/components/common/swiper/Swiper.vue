@@ -1,6 +1,6 @@
 <template>
     <div id="hy-swiper">
-      <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
+      <div ref="swiper" class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
         <slot></slot>
       </div>
       <slot name="indicator">
@@ -14,11 +14,6 @@
 </template>
 
 <script>
-  // window.onresize = function(){
-  //   setTimeout(()=>{
-  //     location.reload();
-  //   },1000)
-  // }
 	export default {
 		name: "Swiper",
     props: {
@@ -55,7 +50,8 @@
 
         // 2.开启定时器
         this.startTimer();
-      }, 100)
+
+      }, 150)
     },
     methods: {
 		  /**
@@ -123,9 +119,9 @@
        */
 		  handleDom: function () {
         // 1.获取要操作的元素
-        let swiperEl = document.querySelector('.swiper');
+        // let swiperEl = document.querySelector('.swiper');
+        let swiperEl = this.$refs.swiper;
         let slidesEls = swiperEl.getElementsByClassName('slide');
-
         // 2.保存个数
         this.slideCount = slidesEls.length;
 

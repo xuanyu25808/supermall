@@ -3,11 +3,14 @@
     <top-bar class="home-top">
       <div slot="center">购物街</div>
     </top-bar>
+    <!-- 运用一个错觉 记得在组件中使用vuex来同意状态-->
+    <tab-control v-show="isTabFixed" @tabChange="tabChange" :titles="['流行','新款','精选']" ref="tabControl1" class="tab-control" />
+
     <scroll class="scrollHeight" ref="HomeScroll" :probe-type="3" @scroll="scrollChange" :pull-up-load="true" @pullingUp="loadMore">
-      <home-swiper class="home-swiper" :banners="banners" />
+      <home-swiper class="home-swiper" :banners="banners" @HomeSwiperImgLoad="HomeSwiperImgLoad" />
       <home-recommend :recommends="recommends" />
       <home-feature />
-      <tab-control @tabChange="tabChange" class="tab-control" :titles="['流行','新款','精选']" />
+      <tab-control @tabChange="tabChange" :titles="['流行','新款','精选']" ref="tabControl2" />
       <goods-list :goods="showGoods" />
     </scroll>
     <back-top @click.native="backTopClick" v-show="isShowbackTop" />
@@ -29,6 +32,7 @@
     getHomeMultidata,
     getHomeGoods
   } from 'network/home'
+  import {debance} from 'common/utils'
 
   export default {
     name: 'Home',
@@ -62,7 +66,10 @@
         },
         currentType: 'pop',
         //
-        isShowbackTop:false
+        isShowbackTop:false,
+        tabOffsetTop:0,
+        isTabFixed:false,
+        saveY:0
       }
     },
     computed: {
@@ -79,42 +86,68 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
+    mounted(){
+      // 1.图片完成加载的事件监听
+      // 防抖动函数,不让事件频繁的进行触发函数
+      const refresh = debance(this.$refs.HomeScroll.refresh,50)
+      //监听goods中图片加载完成    利用bus总线来操作
+      this.$bus.$on('goodsItemImgLoad',()=>{
+        refresh()
+      })
+    },
+    activated(){
+      // 防止有bug!!!来设置两次
+      this.$refs.HomeScroll.scrollTo(0,this.saveY,0)
+      this.$refs.HomeScroll.refresh()
+      this.$refs.HomeScroll.scrollTo(0,this.saveY,0)
+    },
+    deactivated(){
+      this.saveY = this.$refs.HomeScroll.getSavePositionY()
+    },
     methods: {
       /**
        * 事件监听方法
        **/
-       // 选项卡切换
+      // 选项卡切换
       tabChange(index) {
         switch (index) {
           case 0:
             this.currentType = 'pop'
-            // 一切换选项卡后，重新刷新beter-scroll,重新计算页面高度和强制完成上一页面finishPullUp方法，否则可能无法再次触发上拉加载更多
-            this.$refs.HomeScroll.finishPullUp();
             break
           case 1:
             this.currentType = 'new'
-            this.$refs.HomeScroll.finishPullUp();
             break
           case 2:
             this.currentType = 'sell'
-            this.$refs.HomeScroll.finishPullUp();
             break
         }
+        this.$refs.HomeScroll.refresh()
+        this.$refs.tabControl1.currentIndex = index
+        this.$refs.tabControl2.currentIndex = index
       },
       // 返回顶部
       backTopClick(){
         // 调用scroll组件中的scrollTo方法
         this.$refs.HomeScroll.scrollTo(0,0,2000)
       },
-      // 控制backtop是否显示和隐藏
+      //监听页面滚动的距离
       scrollChange(position){
-        this.isShowbackTop = (-position.y)>1000?true:false
+        // 控制backtop是否显示和隐藏
+        this.isShowbackTop = (-position.y)>1000
         // console.log(position)
+        //设置tabControl是否吸顶
+        this.isTabFixed = (-position.y)>this.tabOffsetTop
       },
       // 上拉加载更多
       loadMore(){
         this.getHomeGoods(this.currentType)
-        this.$refs.HomeScroll.finishPullUp();
+      },
+      //重新计算tabControl的offsetTop高度
+      HomeSwiperImgLoad(){
+        // 2.获取tabControl的offsetTop,设置tabControl的吸顶效果
+        //$el可以获得组件内最外层的元素
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+        // console.log(this.tabOffsetTop)
       },
       /**
        * 网络请求方法
@@ -131,9 +164,10 @@
         const page = this.goods[type].page + 1
         getHomeGoods(type, page).then(res => {
           this.goods[type].list.push(...res.data.list)
-          this.goods[type].page += 1;
-          console.log(this.goods[type].list)
+          this.goods[type].page += 1
 
+          // 完成上拉加载更多，告诉better-scroll，我这里完成了，才能调用下一步
+           this.$refs.HomeScroll.finishPullUp();
         })
       }
     }
@@ -150,16 +184,11 @@
   .home-top {
     background-color: var(--color-tint);
     color: #fff;
-    position: fixed;
+    /* 在使用浏览器原生滚动时可用，现在用better-scroll不需要了 */
+/*    position: fixed;
     top: 0;
     left: 0;
-    z-index: 999;
-  }
-
-  .tab-control {
-    position: sticky;
-    top: 44px;
-    z-index: 998;
+    z-index: 999; */
   }
 
   .scrollHeight {
@@ -169,5 +198,10 @@
     bottom: 49px;
     left: 0;
     right: 0;
+  }
+  .tab-control{
+    position: relative;
+    top: -1px;
+    z-index: 999;
   }
 </style>
