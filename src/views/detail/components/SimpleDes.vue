@@ -6,16 +6,20 @@
     <div class="simpleDes-price-message">
       <div class="price-newPrice">￥{{simpleDes.realPrice}}</div>
       <div class="price-oldPrice">{{simpleDes.oldPrice}}</div>
-      <div class="price-descount" :style="{background:simpleDes.discountBgColor}">{{simpleDes.discountDesc}}</div>
+      <div class="price-descount" v-if="simpleDes.discountDesc" :style="{background:simpleDes.discountBgColor}">{{simpleDes.discountDesc}}</div>
     </div>
     <div class="simpleDes-sale-message">
-      <div class="sale-count" v-if="simpleDes.columns">{{simpleDes.columns[0]}}</div>
-      <div class="sale-star" v-if="simpleDes.columns">{{simpleDes.columns[1]}}</div>
-      <div class="sale-disSale" v-if="simpleDes.services[0]">{{simpleDes.services[0].name}}</div>
+      <div class="sale-count">{{simpleDes.columns[0]}}</div>
+      <div class="sale-star">{{simpleDes.columns[1]}}</div>
+      <div class="sale-disSale">{{simpleDes.services[0].name}}</div>
     </div>
     <div class="simpleDes-transport-message">
-       <div class="noreason" v-if="simpleDes.services[2]">{{simpleDes.services[2].name}}</div>
-      <div class="threeTime" v-if="simpleDes.services[3]">{{simpleDes.services[3].name}}</div>
+      <div class="transport-item" v-for="index in simpleDes.services.length-1" :key="index">
+        <div class="transport-item-imgBox">
+          <img class="transport-item-img" :src="simpleDes.services[index].icon" alt="">
+        </div>
+        <div class="transport-item-info">{{simpleDes.services[index].name}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -79,7 +83,8 @@
     top: -5px;
     font-weight: bold;
   }
-  .simpleDes-sale-message{
+
+  .simpleDes-sale-message {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -89,12 +94,29 @@
     padding-bottom: 8px;
     border-bottom: 2px solid #f3f3f3;
   }
-  .simpleDes-transport-message{
+
+  .simpleDes-transport-message {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 20px;
     padding-bottom: 20px;
     border-bottom: 2px solid #f3f3f3;
+  }
+  .transport-item{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .transport-item-img{
+    width: 10px;
+    height: 10px;
+
+  }
+  .transport-item-info{
+    font-size: 12px;
+    padding-left: 1px;
   }
 </style>

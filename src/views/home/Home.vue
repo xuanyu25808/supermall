@@ -91,7 +91,7 @@
       // 防抖动函数,不让事件频繁的进行触发函数
       const refresh = debance(this.$refs.HomeScroll.refresh,50)
       //监听goods中图片加载完成    利用bus总线来操作
-      this.$bus.$on('goodsItemImgLoad',()=>{
+      this.$bus.$on('HomeGoodsItemImgLoad',()=>{
         refresh()
       })
     },

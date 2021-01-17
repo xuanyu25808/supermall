@@ -31,7 +31,7 @@
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!需要延迟会，
       //等包裹的组件都创建完，这个再创建   因为图片异步加载，计算的高度会有问题
       //1  使用定时器，延迟加载         2.使用事件总线
-      // setTimeout(() => {
+      setTimeout(() => {
         // 1.创建BScroll对象
         this.scroll = new BScroll(this.$refs.wrapper, {
           click: true,
@@ -40,7 +40,6 @@
           // 这里设置为true才能监听上拉加载更多
           pullUpLoad: this.pullUpLoad
         })
-        console.log(this.scroll);
         // 2.实时监听滚动的事件  BScroll自带的方法
         if (this.probeType===2 || this.probeType===3) {
           this.scroll.on('scroll', position => {
@@ -56,7 +55,7 @@
             this.$emit('pullingUp')
           })
         }
-      // }, 500)
+      }, 500)
     },
     methods: {
       scrollTo(x, y, time = 500) {
