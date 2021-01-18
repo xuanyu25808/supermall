@@ -25,6 +25,7 @@
     line-height: 44px;
     text-align: center;
     display: flex;
+
   }
   .left,.right{
     width: 60px;

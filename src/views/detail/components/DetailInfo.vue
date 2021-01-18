@@ -29,7 +29,8 @@
     },
     methods:{
       imgLoad(){
-        this.$bus.$emit('detailImgLoad')
+        // this.$bus.$emit('detailImgLoad')
+        this.$emit('detailImgLoad')
       }
     }
   }

@@ -1,7 +1,7 @@
 <template>
     <swiper>
       <swiper-item v-for="(item,index) in banners" :key="index">
-        <a :href="item.link">
+        <a href="javascript:;">
           <img :src="item.image" alt="" @load="HomeSwiperImgLoad">
         </a>
       </swiper-item>
@@ -25,11 +25,11 @@
     },
     data(){
       return{
-        isEmit:false
+        isEmit:false,
       }
     },
     methods:{
-      // 用来看图片是否加载完成，可用来计算tabControl选项卡的告诉
+      // 用来看图片是否加载完成，可用来计算tabControl选项卡的高度
       HomeSwiperImgLoad(){
         if (!this.isEmit) {
           this.$emit('HomeSwiperImgLoad')

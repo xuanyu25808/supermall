@@ -33,6 +33,7 @@
     getHomeGoods
   } from 'network/home'
   import {debance} from 'common/utils'
+  import {backTopMixin} from 'common/mixin.js'
 
   export default {
     name: 'Home',
@@ -65,8 +66,6 @@
           }
         },
         currentType: 'pop',
-        //
-        isShowbackTop:false,
         tabOffsetTop:0,
         isTabFixed:false,
         saveY:0
@@ -86,6 +85,7 @@
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
     },
+    mixins:[backTopMixin],
     mounted(){
       // 1.图片完成加载的事件监听
       // 防抖动函数,不让事件频繁的进行触发函数
@@ -94,6 +94,8 @@
       this.$bus.$on('HomeGoodsItemImgLoad',()=>{
         refresh()
       })
+
+      this.tabChange(0)
     },
     activated(){
       // 防止有bug!!!来设置两次
@@ -125,15 +127,13 @@
         this.$refs.tabControl1.currentIndex = index
         this.$refs.tabControl2.currentIndex = index
       },
-      // 返回顶部
-      backTopClick(){
-        // 调用scroll组件中的scrollTo方法
-        this.$refs.HomeScroll.scrollTo(0,0,2000)
-      },
+
       //监听页面滚动的距离
       scrollChange(position){
+
         // 控制backtop是否显示和隐藏
         this.isShowbackTop = (-position.y)>1000
+
         // console.log(position)
         //设置tabControl是否吸顶
         this.isTabFixed = (-position.y)>this.tabOffsetTop
@@ -184,6 +184,8 @@
   .home-top {
     background-color: var(--color-tint);
     color: #fff;
+    /* background-color: var(--color-tint);
+    color: #fff; */
     /* 在使用浏览器原生滚动时可用，现在用better-scroll不需要了 */
 /*    position: fixed;
     top: 0;
