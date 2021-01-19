@@ -122,7 +122,6 @@
         // 2.上拉加载更多
         pullUpLoad:true
       })
-      console.log(this.scroll)
       // 实时监听页面滚动的位置
       this.scroll.on('scroll',position=>{
         // console.log(position)

@@ -5,7 +5,7 @@
         <div @click.stop="itemChoise(index)" class="shopcart-btn" ref="shopcartBtn">{{item.selected?'√':''}}</div>
         <div class="shopcart-shopMessage">
           <div class="shopcart-imgBox">
-            <img :src="item.img" alt="" class="shopcart-img">
+            <img :src="item.img" alt="" class="shopcart-img" > <!--@load="shopcartImgLoad"-->
           </div>
           <div class="shopcart-textContent">
             <div class="shopcart-shop-title">{{item.title}}</div>
@@ -26,15 +26,22 @@
     name: "ShopcartShop",
     data() {
       return {
+        emit:null
       }
     },
     methods: {
+      // 改变选中状态
       itemChoise(index) {
         this.$store.commit('changeSelect', index)
       },
+      // 跳转路由
       toDetail(iid){
         this.$router.push('/detail/'+iid)
-      }
+      },
+      // // 图片加载，让首页告知
+      // shopcartImgLoad(){
+      //   this.$emit('shopcartImgLoad')
+      // }
     }
   }
 </script>
@@ -51,6 +58,7 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
+    border-bottom: 1px solid gray;
   }
 
   .shopcart-btn {

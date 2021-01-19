@@ -4,6 +4,7 @@ export default {
 
   //添加该商品到数组中
   addProduct(state, payload) {
+    // 设定选中状态
     payload.selected = true;
     state.productCart.push(payload);
   },

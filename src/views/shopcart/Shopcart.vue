@@ -3,8 +3,9 @@
     <top-bar class="shopcart-topbar">
       <div slot="center">购物车({{$store.state.productCart.length}})</div>
     </top-bar>
-    <scroll class="shopcart-scroll">
-      <shopcart-shop />
+    <scroll class="shopcart-scroll" ref="shopcartScroll">
+     <shopcart-shop  />
+     <!-- @shopcartImgLoad="shopcartImgLoad" -->
     </scroll>
     <shopcart-money class="shopcart-money"/>
   </div>
@@ -23,6 +24,15 @@
       Scroll,
       ShopcartShop,
       ShopcartMoney
+    },
+    // methods:{
+    //   shopcartImgLoad(){
+    //     this.$refs.shopcartScroll.refresh()
+    //   }
+    // },
+    // 每次进来重新刷新一下页面高度
+    activated() {
+      this.$refs.shopcartScroll.refresh()
     }
   }
 </script>
@@ -31,13 +41,16 @@
   .shopcart-topbar {
     background-color: var(--color-tint);
     color: #fff;
+    position: relative;
+    z-index: 999;
   }
   .shopcart-scroll {
     position: absolute;
     top: 44px;
     left: 0;
     right: 0;
-    bottom: 79px;
+    bottom: 80px;
+    overflow: hidden;
   }
   .shopcart-money{
     height: 30px;

@@ -7,7 +7,7 @@
       </div>
       <div class="shopcart-money-coll">合计:{{finalPrice}}</div>
     </div>
-    <div class="shopcart-money-right">去计算</div>
+    <div class="shopcart-money-right" @click="calculateMoney">去计算({{selectCount}})</div>
   </div>
 </template>
 
@@ -16,41 +16,62 @@
     name: 'ShopcartMoney',
     data(){
       return{
-        selectText:''
+        selectText:'',
+        selectCount:0
       }
     },
     computed: {
+      //算最终的价格
       finalPrice() {
+        //价格
         let price = 0;
+        // 多少个
+        let tempCount = 0;
+        //
         for (let n of this.$store.state.productCart) {
           if (n.selected) {
             price += n.price * n.count
+            tempCount++;
           }
         }
+        this.selectCount = tempCount
         return price.toFixed(2)
       },
+
       getSelectText(){
-        for (let n of this.$store.state.productCart) {
-          if (!n.selected) {
-            this.selectText = ''
-            return ''
-          }
+        // 只要有一个没被选中，就不显示  √
+        if ( this.$store.state.productCart.find(n => !n.selected) ) {
+          this.selectText = ''
+          return ''
         }
-        if (this.$store.state.productCart.length) {
-          this.selectText = '√'
-          return '√'
+        if (this.$store.state.productCart.length==0) {
+          this.selectText = ''
+          return ''
         }
+        // 否则返回全选
+        this.selectText = '√'
+        return '√'
       }
     },
     methods: {
+      // 全选状态改变
       allChiose() {
         this.selectText = this.selectText==='√'?'':'√'
         if (this.selectText=='√') {
           this.$store.commit('allstateChange',true)
+          this.selectCount = this.$store.state.productCart.length;
         }else{
           this.$store.commit('allstateChange',false)
+          this.selectCount = 0;
         }
-      }
+      },
+			// 去计算
+			calculateMoney(){
+				if (this.selectCount==0) {
+					this.$toast.show('请选择商品')
+				}
+			}
+				
     }
   }
 </script>

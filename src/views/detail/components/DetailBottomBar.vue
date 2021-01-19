@@ -9,7 +9,7 @@
         <li class="detail-bottom-nav-item">
           <div class="detail-bottom-nav-item-icon icon2">
           </div>
-          <div class="detail-bottom-nav-item-name"icon>店铺</div>
+          <div class="detail-bottom-nav-item-name">店铺</div>
         </li>
         <li class="detail-bottom-nav-item" @click="collectionClick">
           <div ref="collection" class="detail-bottom-nav-item-icon icon3">
@@ -19,15 +19,23 @@
       </ul>
     </div>
     <div class="detail-bottom-btn">
-      <div class="detail-bottom-btn-join" @click="addProduct">加入购物车</div>
+      <div class="detail-bottom-btn-join" ref="detailJoin" @click="addProduct">加入购物车</div>
       <div class="detail-bottom-btn-sale">购买</div>
     </div>
+
+    <!-- 加入购物车动画 -->
+    <div class="" ref="addProductCricle"></div>
   </div>
 </template>
 
 <script>
   export default{
     name:"DetailBottomBar",
+    data(){
+      return{
+        addlock:true
+      }
+    },
     methods:{
       // 收藏按钮
       collectionClick(){
@@ -38,9 +46,22 @@
         }
       },
       addProduct(){
-        this.$emit('addProduct')
-      }
+        if (this.addlock) {
+          this.addlock = false;
+          this.$emit('addProduct')
 
+          // 加入动画效果
+          this.$refs.addProductCricle.classList.add('addProductCricle')
+          setTimeout(()=>{
+            this.$refs.addProductCricle.classList.remove('addProductCricle')
+            this.$refs.detailJoin.classList.add('detail-bottom-btn-join-active')
+          },490)
+          setTimeout(()=>{
+            this.$refs.detailJoin.classList.remove('detail-bottom-btn-join-active')
+            this.addlock = true
+          },600)
+        }
+      },
     }
   }
 </script>
@@ -119,8 +140,44 @@
     background-color: gold;
     color: black;
   }
+
+  .detail-bottom-btn-join-active{
+    background-color: orangered;
+    color: white;
+  }
+
   .detail-bottom-btn-sale{
     background-color: hotpink;
     color: white;
   }
+
+  .addProductCricle{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 100px;
+    bottom: 90px;
+    background-color: red;
+    border-radius: 50%;
+    background-color: orangered;
+    display: block;
+    animation: cricleRun .5s linear 0s;
+  }
+  @keyframes cricleRun{
+    0%{
+      right: 100px;
+      bottom: 90px;
+      background-color: transparent;
+    }
+    40%{
+      right: 120px;
+      bottom: 120px;
+    }
+    100%{
+      right: 130px;
+      bottom: 20px;
+      background-color: orangered;
+    }
+  }
+
 </style>
