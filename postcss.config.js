@@ -10,7 +10,7 @@ module.exports = {
       selectorBlackList:['ignore','tabbar','tabbar-item'],//指定不需要转换的类
       minPixelValue:1,    //小于或等于'1px'不转换为视窗单位
       mediaQyery:false,   //允许在媒体查询中转换'px',
-      exclude:[/DetailBottomBar/]   //包含DetailBottomBar的文件不需要转化  写正则
+      exclude:[/DetailBottomBar/,/TabbarItem/]   //包含DetailBottomBar的文件不需要转化  写正则
     },
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="recomment">
-    <div class="recomment-item" v-for="item in recommends">
-      <a class="recomment-link" :href="item.link">
+    <div class="recomment-item" v-for="(item,index) in recommends" :key="index">
+      <a class="recomment-link" href="javascript:;">
         <div class="recomment-imgBox">
           <img class="recomment-img" :src="item.image" alt="">
         </div>
