@@ -122,6 +122,7 @@
             this.currentType = 'sell'
             break
         }
+				this.$refs.HomeScroll.scrollTo(0,-this.tabOffsetTop,0)
         this.$refs.HomeScroll.refresh()
         this.$refs.tabControl1.currentIndex = index
         this.$refs.tabControl2.currentIndex = index

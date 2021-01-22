@@ -45,7 +45,6 @@
         // 获取左侧导航栏信息
         categoryMes().then(res => {
           this.categoryData = res.data.category.list;
-          console.log(this.categoryData);
           this.getTitle(res.data.category.list);
         })
       },
@@ -58,8 +57,6 @@
         }
         categoryShops(maitKey).then(res => {
           this.cateShops = res.data.list
-          console.log(res.data.list);
-
           this.$refs.categoryShops.CategoryShopsScrollRefresh();
 
         })

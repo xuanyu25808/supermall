@@ -6,7 +6,7 @@ export default {
       if (oldProduct) {
         //若有，在方法中给数量加一
         context.commit('addProductCount', oldProduct)
-        resolve('该商品数量加一')
+        resolve('该商品数量加1个')
       } else {
         // 若没有,添加该商品到数组中
         payload.count = 1;
