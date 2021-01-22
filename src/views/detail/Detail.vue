@@ -153,7 +153,9 @@
         // this.$store.commit('addProduct',product)
         // 因为有逻辑判断，所以在action中完成
         this.$store.dispatch('addCart',product).then(res=>{
+          
           this.$toast.show(res)
+          
         })
       }
 

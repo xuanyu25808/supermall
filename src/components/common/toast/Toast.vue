@@ -6,36 +6,34 @@
 
 <script>
   export default {
-    name:"Toast",
-    data(){
-      return{
-        message:'',
-        isShow:false
+    name: "Toast",
+    data() {
+      return {
+        message: '',
+        isShow: false
       }
     },
-    methods:{
-      show(message='默认文字',duration=2000){
+    methods: {
+      show(message = '默认文字', duration = 2000) {
         this.isShow = true
         this.message = message
-        setTimeout(()=>{
+        setTimeout(() => {
           this.isShow = false
           this.message = ''
-        },duration)
+        }, duration)
       }
     }
   }
 </script>
-
 <style scoped>
-  .toast{
+  .toast {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     padding: 8px 10px;
-    background-color: rgba(100,100,100,.6);
+    background-color: rgba(100, 100, 100, .6);
     color: white;
     z-index: 9999;
   }
-
 </style>
