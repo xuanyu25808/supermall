@@ -1,144 +1,100 @@
 <template>
-	<div class="wraper">
-    <ul class="content">
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>4</li>
-      <li>5</li>
-      <li>6</li>
-      <li>7</li>
-      <li>8</li>
-      <li>9</li>
-      <li>10</li>
-      <li>11</li>
-      <li>12</li>
-      <li>13</li>
-      <li>14</li>
-      <li>15</li>
-      <li>16</li>
-      <li>17</li>
-      <li>18</li>
-      <li>19</li>
-      <li>20</li>
-      <li>21</li>
-      <li>22</li>
-      <li>23</li>
-      <li>24</li>
-      <li>25</li>
-      <li>26</li>
-      <li>27</li>
-      <li>28</li>
-      <li>29</li>
-      <li>30</li>
-      <li>31</li>
-      <li>32</li>
-      <li>33</li>
-      <li>34</li>
-      <li>35</li>
-      <li>36</li>
-      <li>37</li>
-      <li>38</li>
-      <li>39</li>
-      <li>40</li>
-      <li>41</li>
-      <li>42</li>
-      <li>43</li>
-      <li>44</li>
-      <li>45</li>
-      <li>46</li>
-      <li>47</li>
-      <li>48</li>
-      <li>49</li>
-      <li>50</li>
-      <li>51</li>
-      <li>52</li>
-      <li>53</li>
-      <li>54</li>
-      <li>55</li>
-      <li>56</li>
-      <li>57</li>
-      <li>58</li>
-      <li>59</li>
-      <li>60</li>
-      <li>61</li>
-      <li>62</li>
-      <li>63</li>
-      <li>64</li>
-      <li>65</li>
-      <li>66</li>
-      <li>67</li>
-      <li>68</li>
-      <li>69</li>
-      <li>70</li>
-      <li>71</li>
-      <li>72</li>
-      <li>73</li>
-      <li>74</li>
-      <li>75</li>
-      <li>76</li>
-      <li>77</li>
-      <li>78</li>
-      <li>79</li>
-      <li>80</li>
-      <li>81</li>
-      <li>82</li>
-      <li>83</li>
-      <li>84</li>
-      <li>85</li>
-      <li>86</li>
-      <li>87</li>
-      <li>88</li>
-      <li>89</li>
-      <li>90</li>
-      <li>91</li>
-      <li>92</li>
-      <li>93</li>
-      <li>94</li>
-      <li>95</li>
-      <li>96</li>
-      <li>97</li>
-      <li>98</li>
-      <li>99</li>
-      <li>100</li>
-    </ul>
-	</div>
+  <div class="category-layout">
+    <top-bar class="category-top-bar">
+      <div slot="center">商品分类</div>
+    </top-bar>
+    <category-navigation :cate-title="cateTitle" @titleClick="titleClick" />
+    <category-shops :cate-shops="cateShops" ref="categoryShops"/>
+  </div>
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
-	export default{
-		name:'Category',
-    data(){
-      return{
-        scroll:null
+  import TopBar from 'components/common/topbar/TopBar.vue'
+
+  import CategoryNavigation from './components/CategoryNavigation'
+  import CategoryShops from './components/CategoryShops'
+
+  import {
+    categoryMes,
+    categoryShops
+  } from 'network/category'
+  export default {
+    name: 'Category',
+    components: {
+      TopBar,
+      CategoryNavigation,
+      CategoryShops
+    },
+    data() {
+      return {
+        categoryData: [],
+        cateTitle: [],
+        cateShops: [],
+        currentIndex: 0,
       }
     },
-    mounted(){
-      // 引入better-scroll
-      this.scroll = new BScroll('.wraper',{
-        // 1.实时监听页面滚动的位置  需要设置为3
-        probeType:3,
-        // 2.上拉加载更多
-        pullUpLoad:true
-      })
-      // 实时监听页面滚动的位置
-      this.scroll.on('scroll',position=>{
-        // console.log(position)
-      })
-      //上拉加载更多
-      this.scroll.on('pullingUp',()=>{
-        console.log(123)
-      })
+    created() {
+      this.categoryMes();
+      this.categoryShops();
+    },
+    methods: {
+      /*
+        获取数据
+      */
+      categoryMes() {
+        // 获取左侧导航栏信息
+        categoryMes().then(res => {
+          this.categoryData = res.data.category.list;
+          console.log(this.categoryData);
+          this.getTitle(res.data.category.list);
+        })
+      },
+      //获取右侧商品信息
+      categoryShops(index) {
+        //最开始的时候this.categoryData还没有数据，所以要做判断
+        let maitKey = 3627
+        if (this.categoryData.length != 0) {
+          maitKey = this.categoryData[index].maitKey
+        }
+        categoryShops(maitKey).then(res => {
+          this.cateShops = res.data.list
+          console.log(res.data.list);
+
+          this.$refs.categoryShops.CategoryShopsScrollRefresh();
+
+        })
+      },
+      // 获取左侧导航标题信息
+      getTitle(res) {
+        let timeTitle = [];
+        for (let item of res) {
+          timeTitle.push(item.title)
+        }
+        this.cateTitle = timeTitle
+      },
+      /*
+        事件监听
+      */
+      //title事件监听
+      titleClick(index) {
+        this.currentIndex = index
+        // 每点击一次后，重新请求数据
+        this.categoryShops(index)
+      }
     }
-	}
+
+  }
 </script>
 
-<style scoped="scoped">
-  .wraper{
+<style scoped>
+  .category-layout{
     width: 100%;
-    height: 200px;
-    background-color: red;
-    overflow: hidden;
+    height: 100vh;
+  }
+  .category-top-bar {
+    background-color: var(--color-tint);
+    color: #fff;
+    position: relative;
+    z-index: 999;
   }
 </style>

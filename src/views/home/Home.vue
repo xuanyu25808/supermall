@@ -5,7 +5,6 @@
     </top-bar>
     <!-- 运用一个错觉 记得在组件中使用vuex来同意状态-->
     <tab-control v-show="isTabFixed" @tabChange="tabChange" :titles="['流行','新款','精选']" ref="tabControl1" class="tab-control" />
-
     <scroll class="scrollHeight" ref="HomeScroll" :probe-type="3" @scroll="scrollChange" :pull-up-load="true" @pullingUp="loadMore">
       <home-swiper class="home-swiper" :banners="banners" @HomeSwiperImgLoad="HomeSwiperImgLoad" />
       <home-recommend :recommends="recommends" />
